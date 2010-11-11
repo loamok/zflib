@@ -1,0 +1,49 @@
+Installation :
+
+Selon votre utilisation adaptez les fichiers :
+
+  - dans tout les cas et avant toute autre modification :
+    - application/Bootstrap.php :
+      + protected function _initLoamok() {
+            $autoloader = Zend_Loader_Autoloader::getInstance();
+            $autoloader->registerNamespace('Loamok_');
+        }
+
+  - Loamok_View_Smarty :
+    - application/configs/application.ini :
+    section "production" :
+      + resources.layout.layoutpath = APPLICATION_PATH "/layouts/scripts/"
+      + resources.layout.contentkey = "content"
+      + resources.layout.template = "Special"
+      + smarty.dir = APPLICATION_PATH "/../library/Smarty/"
+      + smarty.template_dir = APPLICATION_PATH "/views/scripts/"
+      + smarty.compile_dir = APPLICATION_PATH "/../templates_c"
+      + smarty.debug_tpl = APPLICATION_PATH "/../library/Smarty/debug.tpl"
+      + smarty.config_dir = APPLICATION_PATH "/configs"
+      + smarty.cache_dir = APPLICATION_PATH "/../data/cache"
+      + smarty.layout_dir = APPLICATION_PATH "/layouts/scripts"
+      + smarty.force_compile = 0
+      + smarty.compile_check = 1
+      + smarty.debugging = 0
+      + smarty.caching = 1
+    section "development" :
+      + smarty.debugging = 1
+      + smarty.force_compile = 1
+
+    - application/Bootstrap.php :
+      + protected function _initView() {
+            return Loamok_View_Smarty::selfBootstrap($this->getOption('smarty'));
+        }
+
+  - Loamok_View_Smarty :
+    Créez un fichier de configuration (ici layout_ressources.ini) comme décrit :
+    http://redmine.loamok.org/projects/zflib/wiki/Aides_de_vue
+
+    - application/Bootstrap.php :
+      + protected function _init_l_helpers() {
+            Loamok_View_Helper_LayoutRessources::selfBootstrap(
+                APPLICATION_PATH . "/configs/layout_ressources.ini",
+                $this->getResource('view')
+            );
+        }
+
