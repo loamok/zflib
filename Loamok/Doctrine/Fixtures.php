@@ -20,9 +20,11 @@ class Loamok_Doctrine_Fixtures {
     }
 
     protected function _run() {
+        $config = Zend_Registry::get("config");
         foreach ($this->_datas as $k => &$datas) {
             foreach ($datas as $key => $table) {
-                $objClass = "Application_Model_{$k}";
+                require_once ("{$config->doctrine->models_path}/{$k}.php");
+                $objClass = "{$k}";
                 $datas[$key]['object'] = new $objClass();
                 $datas[$key]['object']->merge($table['values']);
                 $datas[$key]['object']->save();

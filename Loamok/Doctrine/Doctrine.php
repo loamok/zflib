@@ -17,6 +17,7 @@ set_include_path(implode(PATH_SEPARATOR, array(
     realpath(APPLICATION_PATH . '/../library'),
     get_include_path(),
 )));
+require_once "zfPath.php";
 set_include_path(implode(PATH_SEPARATOR, array(
     realpath(APPLICATION_PATH . '/../library/Doctrine'),
     get_include_path(),
@@ -46,7 +47,7 @@ if(@$_SERVER["argv"][1] == "load-data") {
     require_once 'Loamok/Doctrine/Fixtures.php';
     require_once $config['data_fixtures_path']."/".$fixture.".php";
     $fixClass = "Application_Data_Fixture_{$fixture}";
-    $clean = ($_SERVER["argv"][3] == "clean")?true:false;
+    $clean = (@$_SERVER["argv"][3] == "clean")?true:false;
     $fix = new $fixClass($clean);
 
     $fix->run();

@@ -19,7 +19,7 @@ class Loamok_Doctrine_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $manager->setAttribute(Doctrine::ATTR_QUOTE_IDENTIFIER, true);
         $manager->setAttribute(
           Doctrine::ATTR_MODEL_LOADING,
-          DOctrine::MODEL_LOADING_CONSERVATIVE
+          Doctrine::MODEL_LOADING_CONSERVATIVE
         );
         $manager->setAttribute(Doctrine::ATTR_AUTOLOAD_TABLE_CLASSES, true);
 
