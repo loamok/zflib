@@ -1,4 +1,6 @@
 <?php
+/*
+*/
 class Loamok_Doctrine_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
     protected function initDoctrine() {
