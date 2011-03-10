@@ -1,5 +1,25 @@
 Installation :
 
+Installez les librairies Doctrine (1.2) et Smarty (2.6.25 +) :
+
+    - Doctrine :
+        $ svn co http://svn.github.com/doctrine/doctrine1.git library/Doctrine
+        $ git clone git://github.com/doctrine/doctrine1.git library/Doctrine
+
+        $ mv library/Doctrine/lib/* library/Doctrine/
+
+        Vous pouvez ensuite supprimer tout les fichiers sauf Doctrine.php
+        et le répertoire Doctrine si vous le désirez
+
+    - Smarty :
+$ svn co http://smarty-php.googlecode.com/svn/branches/Smarty2Dev/libs/ library/Smarty
+
+Installez la librairie Loamok ZF Library :
+
+    $ git clone http://redmine.loamok.org/git/zflib library/Loamok
+    $ mv library/Loamok/Loamok/* library/Loamok/
+    $ rm -rf library/Loamok/Loamok
+
 Selon votre utilisation adaptez les fichiers :
 
   - dans tout les cas et avant toute autre modification :
