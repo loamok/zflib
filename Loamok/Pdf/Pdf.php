@@ -61,8 +61,10 @@ class Loamok_Pdf_Pdf {
     }
 
     protected function storeSession() {
-        if (file_exists($sessionFile)) {
-            unlink($sessionFile);
+        if(isset ($sessionFile)) {
+            if (file_exists($sessionFile)) {
+                unlink($sessionFile);
+            }
         }
         $config = Zend_Registry::get('config');
         $sessionFile = tempnam($config['library']['loamok']['pdf']['temp'].'/', 'pdfcontext-');
