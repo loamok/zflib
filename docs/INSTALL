@@ -1,5 +1,6 @@
 Installation :
 
+ORM :
 Installez les librairies Doctrine (1.2) et Smarty (2.6.25 +) :
 
     - Doctrine :
@@ -9,17 +10,70 @@ Installez les librairies Doctrine (1.2) et Smarty (2.6.25 +) :
         $ mv library/Doctrine/lib/* library/Doctrine/
 
         Vous pouvez ensuite supprimer tout les fichiers sauf Doctrine.php
-        et le répertoire Doctrine si vous le désirez
+        et le répertoire Doctrine si vous le désirez.
 
+-------------------------------------------------------------------------------
+Moteur de template :
     - Smarty :
 $ svn co http://smarty-php.googlecode.com/svn/branches/Smarty2Dev/libs/ library/Smarty
 
+-------------------------------------------------------------------------------
+Manipulations de pdf :
+Installez le binaire WkHtmlToPdf : (évitez les version rc ou beta)
+    $ mkdir -p library/wkhtmltopdf
+    $ cd library/wkhtmltopdf
+    - Trouvez la version qui convient à votre environnement sur cette page :
+        http://code.google.com/p/wkhtmltopdf/downloads/list
+        sous gnu linux wkhtmltopdf requiers les librairies :
+        libc6 (>= 2.4)
+        libgcc1 (>= 1:4.1.1)
+        libqt4-network (>= 4:4.6.0)
+        libqt4-webkit (>= 4:4.6.0)
+        libqtcore4 (>= 4:4.6.0)
+        libqtgui4 (>= 4:4.6.0)
+        libstdc++6 (>= 4.1.1)
+        Sous ubuntu et debain like :
+$ sudo apt-get install libc6 libgcc1 libqt4-network libqt4-webkit libqtcore4 libqtgui4 libstdc++6
+
+    exemple avec la version linux 32bits 0.9.9 :
+
+    $ wget -c http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.9.9-static-i386.tar.bz2
+    $ bunzip2 wkhtmltopdf-0.9.9-static-i386.tar.bz2
+    $ tar xvf wkhtmltopdf-0.9.9-static-i386.tar
+    $ rm wkhtmltopdf-0.9.9-static-i386.tar
+
+Installez tcpdf :
+    $ cd library
+    $ wget -c http://sunet.dl.sourceforge.net/project/tcpdf/tcpdf_5_9_060.zip
+    $ unzip tcpdf_5_9_060.zip
+    $ chmod -R 755 tcpdf
+    $ rm tcpdf_5_9_060.zip
+
+Installez fpdf :
+    $ cd library
+    - Téléchargez l'archive et décompressez la dans library (echec de wget sur cette librairie)
+    - assurez vous que le répertoire de la librairie est bien fpdf et non fpdf16
+
+Installez fpdi :
+    $ mkdir -p library/fpdi
+    $ cd library/fpdi
+    $ wget -c http://www.setasign.de/supra/kon2_dl/30473/FPDI-1.4.tgz
+    $ tar xvzf FPDI-1.4.tgz
+    $ rm FPDI-1.4.tgz
+    $ wget -c http://www.setasign.de/supra/kon2_dl/30471/FPDF_TPL-1.2.tgz
+    $ tar xvzf FPDF_TPL-1.2.tgz
+    $ rm FPDF_TPL-1.2.tgz
+    $ chmod -R 755 *
+
+-------------------------------------------------------------------------------
+Librairie Loamok :
 Installez la librairie Loamok ZF Library :
 
     $ git clone http://redmine.loamok.org/git/zflib library/Loamok
     $ mv library/Loamok/Loamok/* library/Loamok/
     $ rm -rf library/Loamok/Loamok
 
+-------------------------------------------------------------------------------
 Selon votre utilisation adaptez les fichiers :
 
   - dans tout les cas et avant toute autre modification :
@@ -28,7 +82,8 @@ Selon votre utilisation adaptez les fichiers :
             $autoloader = Zend_Loader_Autoloader::getInstance();
             $autoloader->registerNamespace('Loamok_');
         }
-
+-------------------------------------------------------------------------------
+Smarty :
   - Loamok_View_Smarty :
     - application/configs/application.ini :
     section "production" :
@@ -66,4 +121,25 @@ Selon votre utilisation adaptez les fichiers :
                 $this->getResource('view')
             );
         }
+-------------------------------------------------------------------------------
+Doctrine :
+    - application/Bootstrap.php :
+        * class Bootstrap extends Loamok_Doctrine_Bootstrap
+        + protected function _initDoctrine() {
+              return $this->initDoctrine();
+          }
 
+
+-------------------------------------------------------------------------------
+Pdf :
+    $ mkdir -p data/template
+    - application/configs/application.ini :
+        + library.wkhtmltopdf.path = ROOT_PATH "/library/Loamok/Pdf/wkhtmltopdf"
+        + library.wkhtmltopdf.cmd = "wkhtmltopdf-i386" ; (à adapter selon votre environnement)
+        + library.loamok.pdf.template.pdf = ROOT_PATH "/data/template"
+        + library.loamok.pdf.temp = ROOT_PATH "/tmp/"
+
+    - application/Bootstrap.php :
+        + protected function _initConfig() {
+        +   Zend_Registry::set("config", $this->getOptions());
+        + }

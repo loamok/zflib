@@ -1,12 +1,25 @@
 Loamok ZF Library http://redmine.loamok.org/projects/zflib
 
+Documentation complète sur http://redmine.loamok.org/projects/zflib/wiki
+
 Librairie pour le Zend Framework
 
 [[http://framework.zend.com/]]
+[[http://www.doctrine-project.org/]]
 [[http://www.smarty.net/]]
+[[http://code.google.com/p/wkhtmltopdf/]]
+[[http://www.tcpdf.org/]]
+[[http://www.setasign.de/products/pdf-php-solutions/fpdi/]]
+[[http://www.fpdf.org/]]
 
 -------------------------------------------------------------------------------
 Installation :
 
-Voir INSTALL
+Voir docs/INSTALL
 
+-------------------------------------------------------------------------------
+Licence :
+
+GNU GENERAL PUBLIC V3
+
+Voir docs/LICENSE
