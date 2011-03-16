@@ -134,10 +134,11 @@ Doctrine :
 Pdf :
     $ mkdir -p data/template
     - application/configs/application.ini :
-        + library.wkhtmltopdf.path = ROOT_PATH "/library/Loamok/Pdf/wkhtmltopdf"
+        + library.wkhtmltopdf.path = ROOT_PATH "/library/wkhtmltopdf"
         + library.wkhtmltopdf.cmd = "wkhtmltopdf-i386" ; (à adapter selon votre environnement)
         + library.loamok.pdf.template.pdf = ROOT_PATH "/data/template"
         + library.loamok.pdf.temp = ROOT_PATH "/tmp/"
+        + library.loamok.pdf.orientation = 0
 
     - application/Bootstrap.php :
         + protected function _initConfig() {

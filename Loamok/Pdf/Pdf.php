@@ -26,13 +26,19 @@ class Loamok_Pdf_Pdf {
     public function __construct($param) {
         // sauvegarde la session en fichier temporaire
         $sessionFile = $this->storeSession();
-
+        $config = Zend_Registry::get('config');
         // affectation des paramètres
         if (!array_key_exists('url', $param)) {
             throw new Zend_Exception("No URL given");
         }
-        if (!array_key_exists('orientation', $param) or
-            ($param['orientation'] != self::PORTRAIT and $param['orientation'] != self::LANDSCAPE)) {
+        if (!array_key_exists('orientation', $param)) {
+            if(!array_key_exists('orientation', $config['library']['loamok']['pdf'])) {
+                $param['orientation'] = self::PORTRAIT;
+            } else {
+                $param['orientation'] = $config['library']['loamok']['pdf']['orientation'];
+            }
+        }    
+        if (($param['orientation'] != self::PORTRAIT and $param['orientation'] != self::LANDSCAPE)) {
                 throw new Zend_Exception("Invalid orientation");
         }
         // rajoute le fichier de session en paramètre d'url
@@ -49,7 +55,6 @@ class Loamok_Pdf_Pdf {
             $this->margins = $param['margins'];
         }
         if (array_key_exists('template', $param)) {
-            $config = Zend_Registry::get('config');
             $this->template = $config['library']['loamok']['pdf']['template']['pdf'].'/'.$param['template'];
         }
         if (array_key_exists('header', $param) and is_array($param['header'])) {
