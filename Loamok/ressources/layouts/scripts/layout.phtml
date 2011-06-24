@@ -1,0 +1,32 @@
+<xml version="1.0" encoding="UTF-8" />
+{$this->doctype()}
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang="en" lang="en">
+    <head>
+        {$this->l_headTitle()}
+        {$this->headScript()}
+        {$this->headLink()}
+        {$this->headMeta()}
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name="keywords" content="" />
+        {if $debugging}
+            {debug}
+        {/if}
+    </head>
+    <body>
+        <div id="breadCrumb">{$this->l_breadCrumb()}</div>
+        <!-- end header -->
+        <div id="wrapper">
+            <!-- start page -->
+            <div id="page">
+                <!-- start content -->
+                <div id="content">{$_layout->content}</div>
+                <!-- end content -->
+                <div style="clear: both;">&nbsp;</div>
+            </div>
+            <!-- end page -->
+        </div>
+        <div id="footer">
+            &nbsp;
+        </div>
+    </body>
+</html>

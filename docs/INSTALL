@@ -32,7 +32,7 @@ Installez le binaire WkHtmlToPdf : (évitez les version rc ou beta)
         libqtcore4 (>= 4:4.6.0)
         libqtgui4 (>= 4:4.6.0)
         libstdc++6 (>= 4.1.1)
-        Sous ubuntu et debain like :
+        Sous ubuntu et debian like :
 $ sudo apt-get install libc6 libgcc1 libqt4-network libqt4-webkit libqtcore4 libqtgui4 libstdc++6
 
     exemple avec la version linux 32bits 0.9.9 :
@@ -44,22 +44,24 @@ $ sudo apt-get install libc6 libgcc1 libqt4-network libqt4-webkit libqtcore4 lib
 
 Installez tcpdf :
     $ cd library
-    $ wget -c http://sunet.dl.sourceforge.net/project/tcpdf/tcpdf_5_9_060.zip
-    $ unzip tcpdf_5_9_060.zip
+    $ wget -c http://sunet.dl.sourceforge.net/project/tcpdf/tcpdf_5_9_098.zip
+    $ unzip tcpdf_5_9_098.zip
     $ chmod -R 755 tcpdf
-    $ rm tcpdf_5_9_060.zip
+    $ rm tcpdf_5_9_098.zip
 
 Installez fpdf :
     $ cd library
     - Téléchargez l'archive et décompressez la dans library (echec de wget sur cette librairie)
+        http://www.fpdf.org/
+        Seule la version 1.6 à été testé et validé comme fonctionelle avec fpdi
     - assurez vous que le répertoire de la librairie est bien fpdf et non fpdf16
 
 Installez fpdi :
     $ mkdir -p library/fpdi
     $ cd library/fpdi
-    $ wget -c http://www.setasign.de/supra/kon2_dl/30473/FPDI-1.4.tgz
+    $ wget -c http://www.setasign.de/supra/kon2_dl/34139/FPDI-1.4.1.tgz
     $ tar xvzf FPDI-1.4.tgz
-    $ rm FPDI-1.4.tgz
+    $ rm FPDI-1.4.1.tgz
     $ wget -c http://www.setasign.de/supra/kon2_dl/30471/FPDF_TPL-1.2.tgz
     $ tar xvzf FPDF_TPL-1.2.tgz
     $ rm FPDF_TPL-1.2.tgz
@@ -77,11 +79,9 @@ Installez la librairie Loamok ZF Library :
 Selon votre utilisation adaptez les fichiers :
 
   - dans tout les cas et avant toute autre modification :
-    - application/Bootstrap.php :
-      + protected function _initLoamok() {
-            $autoloader = Zend_Loader_Autoloader::getInstance();
-            $autoloader->registerNamespace('Loamok_');
-        }
+    - application/configs/application.ini :
+      + autoloaderNamespaces[] = "Loamok"
+
 -------------------------------------------------------------------------------
 Smarty :
   - Loamok_View_Smarty :
@@ -121,6 +121,16 @@ Smarty :
                 $this->getResource('view')
             );
         }
+
+    Créer les répertoires pour Smarty :
+        $ mkdir -p templates_c data/cache
+        $ sudo chown -R :www-data tmp templates_c data/cache
+        $ chmod -R g=u tmp templates_c data/cache
+
+    Copier les ressources de base pour l'utilisation de Smarty :
+        $ cp -a library/Loamok/ressources/layouts application/
+        $ cp -a library/Loamok/ressources/scripts application/views
+
 -------------------------------------------------------------------------------
 Doctrine :
     - application/Bootstrap.php :
@@ -129,6 +139,25 @@ Doctrine :
               return $this->initDoctrine();
           }
 
+    Créer les répertoires nécéssaires à Doctrine :
+        $ mkdir -p data/fixtures data/sql data/migrations data/schema
+
+    - application/configs/application.ini :
+        + ; ---
+        + ; Doctrine
+        + ; ---
+
+        + doctrine.dsn                = "mysql://user:password@host/dbname"
+        + doctrine.data_fixtures_path = APPLICATION_PATH "/../data/fixtures"
+        + doctrine.sql_path           = APPLICATION_PATH "/../data/sql"
+        + doctrine.migrations_path    = APPLICATION_PATH "/../data/migrations"
+        + doctrine.yaml_schema_path   = APPLICATION_PATH "/../data/schema"
+        + doctrine.models_path        = APPLICATION_PATH "/models"
+        + doctrine.generate_models_options.generateTableClasses   = true
+        + doctrine.generate_models_options.generateBaseClasses    = true
+        + doctrine.generate_models_options.baseClassPrefix        = "Base_"
+        + doctrine.generate_models_options.baseClassesDirectory   = "Base"
+        + doctrine.generate_models_options.classPrefixFiles       = false
 
 -------------------------------------------------------------------------------
 Pdf :
@@ -141,5 +170,5 @@ Pdf :
 
     - application/Bootstrap.php :
         + protected function _initConfig() {
-        +   Zend_Registry::set("config", $this->getOptions());
-        + }
+           Zend_Registry::set("config", $this->getOptions());
+         }

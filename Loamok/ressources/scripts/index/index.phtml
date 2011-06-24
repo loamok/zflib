@@ -1,0 +1,19 @@
+<div class="post">
+    <h1 class="title">Welcome to the <span id="zf-name">Zend Framework!</span></h1>
+
+    <h3 class="byline">This is your project's main page</h3>
+
+    <div class="flower"><img src="http://framework.zend.com/images/PoweredBy_ZF_4LightBG.png" /></div>
+    <div class="entry">
+        Helpful Links: <br />
+        <a href="http://framework.zend.com/">Zend Framework Website</a> |
+        <a href="http://framework.zend.com/manual/en/">Zend Framework Manual</a>
+    </div>
+    <div class="entry">
+        {foreach from=$this->users item=user}
+            Id : {$user->id}<br />
+            Login : {$user->login}<br />
+            Groupe : {$user->Role->label}<br />
+        {/foreach}
+    </div>
+</div>
