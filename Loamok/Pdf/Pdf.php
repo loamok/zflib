@@ -16,6 +16,7 @@ class Loamok_Pdf_Pdf {
        );
     protected $header;
     protected $footer;
+    protected $files;
 
     const PORTRAIT  = 0;
     const LANDSCAPE = 1;
@@ -26,13 +27,19 @@ class Loamok_Pdf_Pdf {
     public function __construct($param) {
         // sauvegarde la session en fichier temporaire
         $sessionFile = $this->storeSession();
-
+        $config = Zend_Registry::get('config');
         // affectation des paramètres
         if (!array_key_exists('url', $param)) {
             throw new Zend_Exception("No URL given");
         }
-        if (!array_key_exists('orientation', $param) or
-            ($param['orientation'] != self::PORTRAIT and $param['orientation'] != self::LANDSCAPE)) {
+        if (!array_key_exists('orientation', $param)) {
+            if(!array_key_exists('orientation', $config['library']['loamok']['pdf'])) {
+                $param['orientation'] = self::PORTRAIT;
+            } else {
+                $param['orientation'] = $config['library']['loamok']['pdf']['orientation'];
+            }
+        }    
+        if (($param['orientation'] != self::PORTRAIT and $param['orientation'] != self::LANDSCAPE)) {
                 throw new Zend_Exception("Invalid orientation");
         }
         // rajoute le fichier de session en paramètre d'url
@@ -49,23 +56,25 @@ class Loamok_Pdf_Pdf {
             $this->margins = $param['margins'];
         }
         if (array_key_exists('template', $param)) {
-            $config = Zend_Registry::get('config');
             $this->template = $config['library']['loamok']['pdf']['template']['pdf'].'/'.$param['template'];
         }
         if (array_key_exists('header', $param) and is_array($param['header'])) {
             $this->header = $param['header'];
         }
         if (array_key_exists('footer', $param) and is_array($param['footer'])) {
-        $this->footer = $param['footer'];
-    }
+            $this->footer = $param['footer'];
+        }
     }
 
     protected function storeSession() {
-        if (file_exists($sessionFile)) {
-            unlink($sessionFile);
+        if(isset ($sessionFile)) {
+            if (file_exists($sessionFile)) {
+                unlink($sessionFile);
+            }
         }
         $config = Zend_Registry::get('config');
         $sessionFile = tempnam($config['library']['loamok']['pdf']['temp'].'/', 'pdfcontext-');
+        $this->files[$sessionFile] = $sessionFile;
         file_put_contents($sessionFile, serialize($_SESSION));
         return $sessionFile;
     }
@@ -85,6 +94,7 @@ class Loamok_Pdf_Pdf {
         // crée le contenu dans un pdf temporaire
         $config = Zend_Registry::get('config');
         $tempContentFile = tempnam($config['library']['loamok']['pdf']['temp'].'/', 'pdf-');
+        $this->files[$tempContentFile] = $tempContentFile;
         $pdfWk = new Loamok_Pdf_PdfWebkit($this->url, $this->orientation, $this->margins);
         $pdfWk->render($tempContentFile);
 
@@ -99,10 +109,14 @@ class Loamok_Pdf_Pdf {
             );
         $pdfTemplate->render();
         $pdfTemplate->Output($filename);
+        $this->unlinkAll();
+    }
 
-        // purge le fichier temporaire
-        if (file_exists($tempContentFile)) {
-            unlink($tempContentFile);
+    protected function unlinkAll() {
+        foreach($this->files as $file) {
+            if (file_exists($file)) {
+                unlink($file);
+            }
         }
     }
 }
