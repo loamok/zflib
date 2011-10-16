@@ -72,8 +72,6 @@ Librairie Loamok :
 Installez la librairie Loamok ZF Library :
 
     $ git clone http://redmine.loamok.org/git/zflib library/Loamok
-    $ mv library/Loamok/Loamok/* library/Loamok/
-    $ rm -rf library/Loamok/Loamok
 
 -------------------------------------------------------------------------------
 Selon votre utilisation adaptez les fichiers :
