@@ -30,7 +30,7 @@ class Loamok_Pdf_PdfWebkit {
         } else {
             $url = $this->url;
         }
-        $cmd = $config['library']['wkhtmltopdf']['path'].'/'.$config['library']['wkhtmltopdf']['cmd'].' --quiet --page-size A4 --margin-top '.$this->margins['top'].' --margin-right '.$this->margins['right'].' --margin-bottom '.$this->margins['bottom'].' --margin-left '.$this->margins['left'].' --orientation '.$this->getOrientation().' '.$url.' '.$filename;
+        $cmd = $config->library->wkhtmltopdf->path.'/'.$config->library->wkhtmltopdf->cmd.' --quiet --page-size A4 --margin-top '.$this->margins['top'].' --margin-right '.$this->margins['right'].' --margin-bottom '.$this->margins['bottom'].' --margin-left '.$this->margins['left'].' --orientation '.$this->getOrientation().' '.$url.' '.$filename;
         exec($cmd);
     }
 

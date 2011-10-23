@@ -6,7 +6,7 @@
 class Loamok_Pdf_Pdf {
 
     protected $url;
-    protected $template;
+    protected $template=null;
     protected $orientation = self::PORTRAIT;
     protected $margins = array(
            'top' => '20',
@@ -33,12 +33,12 @@ class Loamok_Pdf_Pdf {
             throw new Zend_Exception("No URL given");
         }
         if (!array_key_exists('orientation', $param)) {
-            if(!array_key_exists('orientation', $config['library']['loamok']['pdf'])) {
+            if(!array_key_exists('orientation', $config->library->loamok->pdf)) {
                 $param['orientation'] = self::PORTRAIT;
             } else {
-                $param['orientation'] = $config['library']['loamok']['pdf']['orientation'];
+                $param['orientation'] = $config->library->loamok->pdf->orientation;
             }
-        }    
+        }
         if (($param['orientation'] != self::PORTRAIT and $param['orientation'] != self::LANDSCAPE)) {
                 throw new Zend_Exception("Invalid orientation");
         }
@@ -56,7 +56,7 @@ class Loamok_Pdf_Pdf {
             $this->margins = $param['margins'];
         }
         if (array_key_exists('template', $param)) {
-            $this->template = $config['library']['loamok']['pdf']['template']['pdf'].'/'.$param['template'];
+            $this->template = $config->library->loamok->pdf->template->pdf.'/'.$param['template'];
         }
         if (array_key_exists('header', $param) and is_array($param['header'])) {
             $this->header = $param['header'];
@@ -64,6 +64,7 @@ class Loamok_Pdf_Pdf {
         if (array_key_exists('footer', $param) and is_array($param['footer'])) {
             $this->footer = $param['footer'];
         }
+
     }
 
     protected function storeSession() {
@@ -73,15 +74,18 @@ class Loamok_Pdf_Pdf {
             }
         }
         $config = Zend_Registry::get('config');
-        $sessionFile = tempnam($config['library']['loamok']['pdf']['temp'].'/', 'pdfcontext-');
+        $sessionFile = tempnam($config->library->loamok->pdf->temp.'/', 'pdfcontext-');
         $this->files[$sessionFile] = $sessionFile;
+        if(!isset ($_SESSION)) {
+            session_start();
+        }
         file_put_contents($sessionFile, serialize($_SESSION));
         return $sessionFile;
     }
-	
+
     public static function loadSession($sessionFile) {
         $config = Zend_Registry::get('config');
-        $sessionFile = $config['library']['loamok']['pdf']['temp'].'/'.$sessionFile;
+        $sessionFile = $config->library->loamok->pdf->temp.'/'.$sessionFile;
         if (file_exists($sessionFile)) {
             $_SESSION = unserialize(file_get_contents($sessionFile));
             // réinitialise le chargement des langues depuis le bootstrap
@@ -89,11 +93,11 @@ class Loamok_Pdf_Pdf {
             unlink($sessionFile);
         }
     }
-	
+
     public function output($filename) {
         // crée le contenu dans un pdf temporaire
         $config = Zend_Registry::get('config');
-        $tempContentFile = tempnam($config['library']['loamok']['pdf']['temp'].'/', 'pdf-');
+        $tempContentFile = tempnam($config->library->loamok->pdf->temp.'/', 'pdf-');
         $this->files[$tempContentFile] = $tempContentFile;
         $pdfWk = new Loamok_Pdf_PdfWebkit($this->url, $this->orientation, $this->margins);
         $pdfWk->render($tempContentFile);
@@ -109,7 +113,7 @@ class Loamok_Pdf_Pdf {
             );
         $pdfTemplate->render();
         $pdfTemplate->Output($filename);
-        $this->unlinkAll();
+//        $this->unlinkAll();
     }
 
     protected function unlinkAll() {
