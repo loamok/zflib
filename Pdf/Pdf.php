@@ -113,7 +113,7 @@ class Loamok_Pdf_Pdf {
             );
         $pdfTemplate->render();
         $pdfTemplate->Output($filename);
-//        $this->unlinkAll();
+        $this->unlinkAll();
     }
 
     protected function unlinkAll() {
