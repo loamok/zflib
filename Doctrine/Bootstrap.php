@@ -34,6 +34,7 @@ class Loamok_Doctrine_Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         //on définit la sortie encodée en UTF-8
         $conn->setCharset('utf8');
         $conn->setCollate('utf8_general_ci');
+        Zend_Registry::set('dCon', $conn);
         return $conn;
     }
 
